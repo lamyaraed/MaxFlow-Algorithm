@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Vector;
 
 public class MaxFlowGUI {
     private static JFrame jFrame;
@@ -155,12 +156,12 @@ public class MaxFlowGUI {
             if(valid) {
 
 
-                graphDraw = new GraphDraw(nVert,nEdg,graph.edges);
+                graphDraw = new GraphDraw(nVert,nEdg,graph.edges,sVertex,eVertex);
                 Result = utils.fordFulkerson(graph, sVertex, eVertex);
+                Vector<Edge> path = new Vector<>();
+                path = utils.getPath();
                 ArrayList<Edge> changes = new ArrayList<>();
-                for(Edge g: graph.edges) {
-                    changes.add(g);
-                }
+                changes.addAll(path);
                 graphDraw.getAnswer(changes);
                 textFieldResult.setText(Integer.toString(Result));
             }

@@ -123,6 +123,11 @@ public class Utils {
         // Return the overall flow
         return max_flow;
     }
+
+    Vector<Edge> getPath(){
+        return path;
+    }
+
     int getCapacity(int first,int second,Graph g){
         for (int i = 0; i <g.edges.size() ; i++) {
             if ((g.edges.elementAt(i).source==first && g.edges.elementAt(i).dest==second))

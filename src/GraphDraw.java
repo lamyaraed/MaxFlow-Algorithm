@@ -26,15 +26,17 @@ public class GraphDraw {
     LinkedHashMap<Edge, String> VecEdges = new LinkedHashMap<>();
     Vector<Integer> VisitedVect = new Vector<>();
     ArrayList<Edge> ResultGraph = new ArrayList<>();
-    int Vertices, Edges, CurrVert=99999, PrevVert;
+    int Vertices, startNode, endNode, Edges, CurrVert=99999, PrevVert;
     static int Counter = 0;
     JFrame frame;
     JButton buttonNext;
     Graph graph;
 
-    GraphDraw(int V, int E, Vector<Edge> ed){
+    GraphDraw(int V, int E, Vector<Edge> ed, int start, int end){
         this.Vertices = V;
         this.Edges = E;
+        this.startNode = start;
+        this.endNode = end;
         directedGraph = new DirectedSparseGraph<>();
         for(int i=0; i<Vertices; i++){
             directedGraph.addVertex(i);
@@ -43,7 +45,6 @@ public class GraphDraw {
             Edge myEdge = new Edge(e.capacity, e.source, e.dest);
             String EdgeW =  "0 / " + myEdge.capacity;
             VecEdges.put(myEdge, EdgeW);
-            System.out.println(VecEdges.get(myEdge));
         }
         createGraph();
     }
@@ -107,7 +108,9 @@ public class GraphDraw {
 
             Transformer<Integer, Paint> vertexPaint = new Transformer<Integer,Paint>() {
                 public Paint transform(Integer i) {
-                    return Color.GRAY;
+                    if(i == startNode || i==endNode)
+                        return Color.RED;
+                    else return Color.GRAY;
                 }
             };
             vs.getRenderContext().setVertexFillPaintTransformer(vertexPaint);
@@ -170,7 +173,17 @@ public class GraphDraw {
 
     //todo redo this
     void EdgeValues(Edge edge, int change, int EdgeW){
-        int taken = EdgeW - change;
+        int number = 0;
+        for(Edge y: VecEdges.keySet()) {
+            if (y.source == edge.source && y.dest == edge.dest) {
+                String val = VecEdges.get(y);
+                int index = val.indexOf('/');
+                String n = val.substring(0, index-1);
+                number = Integer.parseInt(n);
+                break;
+            }
+        }
+        int taken = change+ number;
         vs.getRenderContext().setEdgeLabelTransformer(new org.apache.commons.collections15.Transformer<Edge, String>(){
             public String transform(Edge link) {
                 if(link.source == edge.source && link.dest == edge.dest)
@@ -187,8 +200,9 @@ public class GraphDraw {
             public Paint transform(Integer i) {
                 if(CurrVert == i || PrevVert ==i)
                     return Color.GREEN;
-                else
-                    return Color.GRAY;
+                else if(i == startNode || i == endNode)
+                    return Color.RED;
+                else return Color.GRAY;
             }
         };
         vs.getRenderContext().setVertexFillPaintTransformer(vertexPaint);
