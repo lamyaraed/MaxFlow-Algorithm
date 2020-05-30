@@ -1,9 +1,11 @@
 import java.util.LinkedList;
 import java.util.Scanner;
+import java.util.Vector;
 
 public class Utils {
     int start;
     int end;
+    Vector<Edge> path = new Vector<>();
 
 
 //    void InputEdges(Graph graph){
@@ -28,11 +30,11 @@ public class Utils {
 //    }
 
 
-    boolean bfs(Graph g, int s, int t, int parent[])
+    boolean bfs(Graph g, int s, int t, int[] parent)
     {
         // Create a visited array and mark all vertices as not
         // visited
-        boolean visited[] = new boolean[g.Vertex];
+        boolean[] visited = new boolean[g.Vertex];
         for(int i=0; i<g.Vertex; ++i)
             visited[i]=false;
 
@@ -81,12 +83,13 @@ public class Utils {
 
 
         // This array is filled by BFS and to store path
-        int parent[] = new int[g.Vertex];
+        int[] parent = new int[g.Vertex];
 
         int max_flow = 0;  // There is no flow initially
 
         // Augment the flow while tere is path from source
         // to sink
+
         while (bfs(rgraph, s, t, parent))
         {
             // Find minimum residual capacity of the edhes
@@ -101,14 +104,18 @@ public class Utils {
 
             // update residual capacities of the edges and
             // reverse edges along the path
+            Vector<Edge> temp = new Vector<>();
             for (v=t; v != s; v=parent[v])
             {
                 u = parent[v];
                 changeCapacityNegative(u,v,rgraph,path_flow);
                 changeCapacitypositive(v,u,rgraph,path_flow);
-
+                Edge ToBeAdded = new Edge(path_flow, u, v);
+                temp.add(ToBeAdded);
             }
-
+            for (int i = temp.size() - 1; i >= 0; i--) {
+                path.add(temp.elementAt(i));
+            }
             // Add path flow to overall flow
             max_flow += path_flow;
         }
