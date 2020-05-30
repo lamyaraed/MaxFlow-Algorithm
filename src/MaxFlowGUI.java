@@ -2,6 +2,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -156,9 +157,9 @@ public class MaxFlowGUI {
 
                 graphDraw = new GraphDraw(nVert,nEdg,graph.edges);
                 Result = utils.fordFulkerson(graph, sVertex, eVertex);
-                LinkedHashMap<Edge, Integer> changes = new LinkedHashMap<>();
+                ArrayList<Edge> changes = new ArrayList<>();
                 for(Edge g: graph.edges) {
-                    changes.put(g, g.capacity);
+                    changes.add(g);
                 }
                 graphDraw.getAnswer(changes);
                 textFieldResult.setText(Integer.toString(Result));

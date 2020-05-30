@@ -25,7 +25,7 @@ public class GraphDraw {
     static BasicVisualizationServer<Integer,Edge> vs;
     LinkedHashMap<Edge, String> VecEdges = new LinkedHashMap<>();
     Vector<Integer> VisitedVect = new Vector<>();
-    LinkedHashMap<Edge,Integer> ResultGraph = new LinkedHashMap<>();
+    ArrayList<Edge> ResultGraph = new ArrayList<>();
     int Vertices, Edges, CurrVert=99999, PrevVert;
     static int Counter = 0;
     JFrame frame;
@@ -137,14 +137,14 @@ public class GraphDraw {
         boolean flag = false;
         int CurrEdgeW = 0;
         for(Edge y: VecEdges.keySet()){
-            for(Edge k : ResultGraph.keySet()) {
+            for(Edge k : ResultGraph) {
                 if (y.source == k.source && y.dest == k.dest) {
                     //System.out.println( k.source + " --- " + ResultGraph.get(k));
                     CurrentEdg = k;
                     CurrEdgeW = y.capacity;
                     PrevVert = CurrentEdg.source;
                     CurrVert = CurrentEdg.dest;
-                    EdgeValues(CurrentEdg, ResultGraph.get(k), CurrEdgeW);
+                    EdgeValues(CurrentEdg, k.capacity, CurrEdgeW);
                     changeVertColour();
                     flag = true;
                     break;
@@ -152,19 +152,17 @@ public class GraphDraw {
                 if(flag) break;
             }
         }
-//        System.out.println(CurrentEdg);
         ResultGraph.remove(CurrentEdg);
     }
 
     //gets a hashmap for the changed edge and the changed value
-    void getAnswer(LinkedHashMap<Edge,Integer> Answer){
+    void getAnswer(ArrayList<Edge> Answer){
         if (Answer == null) {
             JOptionPane.showMessageDialog(frame, "There is no path from source to destination",
                     "Error", JOptionPane.WARNING_MESSAGE);
         } else {
-            for (Edge i : Answer.keySet()) {
-                ResultGraph.put(i,Answer.get(i));
-                System.out.println( i.source + " --- " + Answer.get(i));
+            for (Edge i : Answer) {
+                ResultGraph.add(i);
             }
             buttonNext.setEnabled(true);
         }
