@@ -158,11 +158,7 @@ public class MaxFlowGUI {
                 Result = utils.fordFulkerson(graph, sVertex, eVertex);
                 LinkedHashMap<Edge, Integer> changes = new LinkedHashMap<>();
                 for(Edge g: graph.edges) {
-                    changes.put(g,5);
-                    System.out.println(g.source + "  " + g.dest + "  " + g.capacity);
-                }
-                for(Edge g: changes.keySet()) {
-                    System.out.println(g.source + "  " + g.dest + "  " + g.capacity);
+                    changes.put(g, g.capacity);
                 }
                 graphDraw.getAnswer(changes);
                 textFieldResult.setText(Integer.toString(Result));

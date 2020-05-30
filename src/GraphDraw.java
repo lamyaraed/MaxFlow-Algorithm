@@ -23,7 +23,7 @@ public class GraphDraw {
     static DirectedSparseGraph<Integer, Edge> directedGraph;
     private Layout<Integer, Edge> graphLayout;
     static BasicVisualizationServer<Integer,Edge> vs;
-    Vector<Edge> VecEdges = new Vector<>();
+    LinkedHashMap<Edge, String> VecEdges = new LinkedHashMap<>();
     Vector<Integer> VisitedVect = new Vector<>();
     LinkedHashMap<Edge,Integer> ResultGraph = new LinkedHashMap<>();
     int Vertices, Edges, CurrVert=99999, PrevVert;
@@ -41,7 +41,9 @@ public class GraphDraw {
         }
         for(Edge e: ed){
             Edge myEdge = new Edge(e.capacity, e.source, e.dest);
-            VecEdges.add(myEdge);
+            String EdgeW =  "0 / " + myEdge.capacity;
+            VecEdges.put(myEdge, EdgeW);
+            System.out.println(VecEdges.get(myEdge));
         }
         createGraph();
     }
@@ -115,11 +117,16 @@ public class GraphDraw {
     }
 
     void drawEdges(){
-        for(Edge e: VecEdges){
-            directedGraph.addEdge(new Edge(e.capacity,e.source,e.dest), e.source, e.dest, EdgeType.DIRECTED);
+        for(Edge e: VecEdges.keySet()){
+            directedGraph.addEdge(e, e.source, e.dest, EdgeType.DIRECTED);
             vs.getRenderContext().setEdgeLabelTransformer(new org.apache.commons.collections15.Transformer<Edge, String>(){
                 public String transform(Edge link) {
-                    return 0 + " / " + link.capacity;
+                    String out = null;
+                    for(Edge o : VecEdges.keySet()){
+                        if(link.source == o.source && link.dest == o.dest)
+                            out = VecEdges.get(o);
+                    }
+                    return out;
                 }
             });
         }
@@ -129,7 +136,7 @@ public class GraphDraw {
         Edge CurrentEdg = null;
         boolean flag = false;
         int CurrEdgeW = 0;
-        for(Edge y: VecEdges ){
+        for(Edge y: VecEdges.keySet()){
             for(Edge k : ResultGraph.keySet()) {
                 if (y.source == k.source && y.dest == k.dest) {
                     //System.out.println( k.source + " --- " + ResultGraph.get(k));
@@ -165,13 +172,12 @@ public class GraphDraw {
 
     //todo redo this
     void EdgeValues(Edge edge, int change, int EdgeW){
-
+        int taken = EdgeW - change;
         vs.getRenderContext().setEdgeLabelTransformer(new org.apache.commons.collections15.Transformer<Edge, String>(){
             public String transform(Edge link) {
                 if(link.source == edge.source && link.dest == edge.dest)
-                    return change + " / " +EdgeW ;
-                else
-                    return Integer.toString(link.capacity);
+                    VecEdges.put(link, taken + " / " +EdgeW);
+                return VecEdges.get(link);
             }
         });
     }
