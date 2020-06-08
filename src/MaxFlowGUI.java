@@ -33,7 +33,7 @@ public class MaxFlowGUI {
     GraphDraw graphDraw;
 
     public static void main(String[] args) {
-        jFrame = new JFrame("Max Flow Graph Algorithm");
+        jFrame = new JFrame("Dijkstra Graph Algorithm");
         jFrame.setContentPane(new MaxFlowGUI().GUIPanel);
         jFrame.setDefaultCloseOperation(jFrame.EXIT_ON_CLOSE);
         jFrame.pack();
